@@ -1,71 +1,34 @@
-// Create a "close" button and append it to each list item
-var myNodelist = document.getElementsByTagName("LI");
-var i;
-for (i = 0; i < myNodelist.length; i++) {
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  myNodelist[i].appendChild(span);
-}
-
-// Click on a close button to hide the current list item
-var close = document.getElementsByClassName("close");
-var i;
-for (i = 0; i < close.length; i++) {
-  close[i].onclick = function() {
-    var div = this.parentElement;
-    div.style.display = "none";
-  }
-}
-
-// Add a "checked" symbol when clicking on a list item
-var list = document.querySelector('ul');
-list.addEventListener('click', function(ev) {
-  if (ev.target.tagName === 'LI') {
-    ev.target.classList.toggle('checked');
-  }
-}, false);
-
-// Create a new list item when clicking on the "Add" button
-function newElement() {
+function addNew() {
+  var ul = document.getElementById("list");
+  var taskName = document.getElementById("taskName").value;
+  var day = document.getElementById("day").value;
+  var minutes = document.getElementById("minutes").value;
+  var rating = document.getElementById("rating").value;
   var li = document.createElement("li");
-  const inputValue = document.getElementById("myInput").value;
-  var x = document.getElementById("myInput3").value, y = document.getElementById("myInput4").value;
-  var test = document.getElementById("myUL")
-  function Urgency(x, y, inputValue, test) { 
-		z = x + y
-		if (test.childNode === undefined) {
-			 var t = document.createTextNode(inputValue); //
-			 li.appendChild(t); //
-			 document.getElementById("myUL").appendChild(li);
-		} else if ( z < 5) {
-			 var t = document.createTextNode(inputValue); //
-			 li.appendChild(t); //
-			 document.getElementById("myUL").appendChild(li);
-			 document.insertBefore(t, test.childNode[0])
-		} else {
-			console.log("else")
-		}
 
-	}
-  if (inputValue === '') {
-    alert("You must write something!");
-  } else {
-	Urgency(x, y, inputValue, test)
-  }
-  document.getElementById("myInput").value = "";
-
-  var span = document.createElement("SPAN");
-  var txt = document.createTextNode("\u00D7");
-  span.className = "close";
-  span.appendChild(txt);
-  li.appendChild(span);
-
-  for (i = 0; i < close.length; i++) {
-    close[i].onclick = function() {
-      var div = this.parentElement;
-      div.style.display = "none";
+  if (!taskName || taskName.length === 0 || !day || day.length === 0 || !minutes || minutes.length === 0 || !rating || rating.length === 0) {
+    alert("Please fill out all data fields");
+  } else if (typeof(rating) == "boolean" || isNaN(rating)) {
+    alert("Urgency should be a number between 1 and 3.");
+  } else if (typeof(rating) != "boolean" && !isNaN(rating)) {
+    if (rating < 1 || rating > 3) {
+      alert("Urgency should be a number between 1 and 3.");
+    } else {
+      li.appendChild(document.createTextNode(taskName));
+      ul.appendChild(li).setAttribute("data-rating", rating);
     }
+  } else {
+    alert("Something went wrong");
   }
+
+
+}
+
+function sort() {
+  $('#list li').sort(sort_li).appendTo('#list');
+
+  function sort_li(a, b) {
+    return ($(b).data('rating')) < ($(a).data('rating')) ? 1 : -1;
+  }
+
 }
